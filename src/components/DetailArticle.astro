@@ -1,0 +1,91 @@
+---
+interface Props {
+  title: string;
+  summary: string;
+  meta: string[];
+  highlights: string[];
+  content: string[];
+}
+
+const { title, summary, meta, highlights, content } = Astro.props;
+---
+
+<section class="section">
+  <article class="content-card article">
+    <div class="article-head">
+      <span class="eyebrow">Detail</span>
+      <h1 class="section-title">{title}</h1>
+      <p class="section-copy">{summary}</p>
+    </div>
+
+    <div class="meta-row">
+      {meta.map((item) => (
+        <span>{item}</span>
+      ))}
+    </div>
+
+    <section class="article-block">
+      <h2>重點整理</h2>
+      <ul>
+        {highlights.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="article-block">
+      <h2>內容說明</h2>
+      {content.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </section>
+  </article>
+</section>
+
+<style>
+  .article {
+    padding: 32px;
+  }
+
+  .article-head {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .meta-row span {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(111, 47, 18, 0.08);
+    color: var(--accent-deep);
+  }
+
+  .article-block + .article-block {
+    margin-top: 28px;
+  }
+
+  .article-block h2 {
+    margin: 0 0 12px;
+  }
+
+  .article-block p,
+  .article-block li {
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .article-block ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+</style>

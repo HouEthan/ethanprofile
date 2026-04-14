@@ -1,0 +1,51 @@
+---
+import CardGrid from "../../components/CardGrid.astro";
+import CategoryStrip from "../../components/CategoryStrip.astro";
+import HeroSection from "../../components/HeroSection.astro";
+import SiteShell from "../../components/SiteShell.astro";
+import { foodCategories, foods } from "../../data/site";
+---
+
+<SiteShell title="Food | Ethan Profile" description="所有美食內容與分類整理">
+  <HeroSection
+    eyebrow="Food"
+    title="所有美食"
+    description="這裡整理我的美食清單，資料結構已保留分類變數，方便後續依照地區、類型或主題擴充。"
+  >
+    <div class="panel info-panel">
+      <h2>{foods.length} 間店</h2>
+      <p>每筆資料都包含 `slug`、`category`、標籤與內容說明，可直接擴充成內容系統。</p>
+    </div>
+  </HeroSection>
+
+  <CategoryStrip title="美食分類" categories={foodCategories} />
+
+  <section class="section">
+    <CardGrid
+      items={foods.map((item) => ({
+        href: `/food/${item.slug}`,
+        title: item.title,
+        summary: item.summary,
+        meta: item.location,
+        category: item.category,
+        tags: item.tags,
+      }))}
+    />
+  </section>
+</SiteShell>
+
+<style>
+  .info-panel {
+    padding: 24px;
+  }
+
+  .info-panel h2 {
+    margin: 0 0 12px;
+  }
+
+  .info-panel p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+</style>

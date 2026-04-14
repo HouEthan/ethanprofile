@@ -1,0 +1,63 @@
+---
+import type { Category } from "../data/site";
+
+interface Props {
+  title: string;
+  categories: Category[];
+}
+
+const { title, categories } = Astro.props;
+---
+
+<section class="section">
+  <div class="panel strip">
+    <div>
+      <span class="eyebrow">Categories</span>
+      <h2>{title}</h2>
+    </div>
+    <div class="chips">
+      {categories.map((category) => (
+        <span>{category.label}</span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .strip {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    padding: 24px 28px;
+  }
+
+  .strip h2 {
+    margin: 10px 0 0;
+    font-size: 1.5rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chips span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  @media (max-width: 860px) {
+    .strip {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

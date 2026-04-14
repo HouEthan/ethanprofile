@@ -1,0 +1,92 @@
+---
+interface CardItem {
+  href: string;
+  title: string;
+  summary: string;
+  meta?: string;
+  category?: string;
+  tags?: string[];
+}
+
+interface Props {
+  items: CardItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid-3">
+  {items.map((item) => (
+    <a href={item.href} class="content-card card-link">
+      <div class="card-head">
+        {item.category && <span class="card-category">{item.category}</span>}
+        {item.meta && <span class="card-meta">{item.meta}</span>}
+      </div>
+      <h2>{item.title}</h2>
+      <p>{item.summary}</p>
+      {item.tags && (
+        <div class="card-tags">
+          {item.tags.map((tag) => (
+            <span>{tag}</span>
+          ))}
+        </div>
+      )}
+    </a>
+  ))}
+</div>
+
+<style>
+  .card-link {
+    display: grid;
+    gap: 16px;
+    padding: 22px;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .card-link:hover {
+    transform: translateY(-3px);
+    border-color: rgba(178, 85, 45, 0.3);
+    background: rgba(255, 253, 249, 0.95);
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .card-category,
+  .card-meta,
+  .card-tags span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(111, 47, 18, 0.08);
+    color: var(--accent-deep);
+    font-size: 0.82rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>

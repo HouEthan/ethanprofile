@@ -1,0 +1,101 @@
+---
+import CardGrid from "../components/CardGrid.astro";
+import HeroSection from "../components/HeroSection.astro";
+import SiteShell from "../components/SiteShell.astro";
+import { featuredProjects, profile } from "../data/site";
+---
+
+<SiteShell title="About | Ethan Profile" description="關於我與最重要的專案整理">
+  <HeroSection
+    eyebrow="About"
+    title="關於我與最重要的專案資料"
+    description="這一頁集中放最關鍵的個人背景、目前關注的主題，以及優先想讓人看到的作品。"
+    actions={[{ href: "/projects", label: "瀏覽所有專案" }]}
+  >
+    <div class="panel about-side">
+      <h2>{profile.name}</h2>
+      <p>{profile.title}</p>
+      <p>{profile.contact.location}</p>
+      <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
+    </div>
+  </HeroSection>
+
+  <section class="section about-grid">
+    <div class="content-card bio">
+      <span class="eyebrow">Profile</span>
+      <h2>個人簡介</h2>
+      {profile.about.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </div>
+    <div class="content-card bio">
+      <span class="eyebrow">Focus</span>
+      <h2>目前關注</h2>
+      <ul>
+        {profile.focusAreas.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <span class="eyebrow">Featured Projects</span>
+      <h2>精選專案</h2>
+    </div>
+    <CardGrid
+      items={featuredProjects.map((project) => ({
+        href: `/projects/${project.slug}`,
+        title: project.title,
+        summary: project.summary,
+        meta: project.role,
+        category: project.year,
+        tags: project.stack,
+      }))}
+    />
+  </section>
+</SiteShell>
+
+<style>
+  .about-side {
+    display: grid;
+    gap: 8px;
+    padding: 24px;
+  }
+
+  .about-side h2,
+  .bio h2,
+  .section-head h2 {
+    margin: 8px 0 12px;
+  }
+
+  .about-side p,
+  .bio p,
+  .bio li {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 18px;
+  }
+
+  .bio {
+    padding: 24px;
+  }
+
+  .bio ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

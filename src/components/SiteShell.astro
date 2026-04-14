@@ -1,0 +1,214 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Ethan Profile",
+  description = "個人介紹、專案、美食與景點整理",
+} = Astro.props;
+
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/food", label: "Food" },
+  { href: "/view", label: "View" },
+];
+---
+
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="/">Ethan Profile</a>
+        <nav>
+          <ul>
+            {navItems.map((item) => (
+              <li>
+                <a href={item.href} class={Astro.url.pathname === item.href ? "active" : ""}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  :global(:root) {
+    --bg: #f5efe6;
+    --bg-soft: #fffaf4;
+    --surface: rgba(255, 250, 244, 0.82);
+    --surface-strong: #fffdf9;
+    --line: rgba(62, 37, 20, 0.12);
+    --text: #24160f;
+    --muted: #6f594a;
+    --accent: #b2552d;
+    --accent-deep: #6f2f12;
+    --shadow: 0 24px 60px rgba(72, 42, 23, 0.12);
+  }
+
+  :global(html) {
+    background:
+      radial-gradient(circle at top left, rgba(227, 156, 98, 0.22), transparent 35%),
+      radial-gradient(circle at top right, rgba(141, 181, 160, 0.22), transparent 32%),
+      linear-gradient(180deg, #fbf5ee 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: "Segoe UI", "Noto Sans TC", sans-serif;
+  }
+
+  :global(body) {
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(a) {
+    color: inherit;
+  }
+
+  :global(main) {
+    display: block;
+  }
+
+  :global(.section) {
+    margin: 0 auto;
+    width: min(1120px, calc(100vw - 32px));
+    padding: 28px 0 72px;
+  }
+
+  :global(.hero-card),
+  :global(.panel),
+  :global(.content-card) {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
+  }
+
+  :global(.eyebrow) {
+    display: inline-flex;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(178, 85, 45, 0.1);
+    color: var(--accent-deep);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  :global(.section-title) {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+  }
+
+  :global(.section-copy) {
+    margin: 0;
+    max-width: 64ch;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  :global(.grid-3) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  :global(.grid-2) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .page-shell {
+    padding-bottom: 56px;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: min(1120px, calc(100vw - 32px));
+    margin: 0 auto;
+    padding: 20px 0;
+    background: linear-gradient(180deg, rgba(245, 239, 230, 0.92), rgba(245, 239, 230, 0.58));
+    backdrop-filter: blur(14px);
+  }
+
+  .brand {
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: var(--muted);
+    padding: 10px 14px;
+    border-radius: 999px;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  nav a:hover,
+  nav a.active {
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 860px) {
+    :global(.grid-3),
+    :global(.grid-2) {
+      grid-template-columns: 1fr;
+    }
+
+    .site-header {
+      position: static;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    nav ul {
+      flex-wrap: wrap;
+    }
+  }
+</style>

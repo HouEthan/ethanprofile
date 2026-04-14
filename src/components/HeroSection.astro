@@ -1,0 +1,77 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  actions?: { href: string; label: string }[];
+}
+
+const { eyebrow, title, description, actions = [] } = Astro.props;
+---
+
+<section class="section">
+  <div class="hero-card hero-layout">
+    <div class="hero-copy">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1 class="section-title">{title}</h1>
+      <p class="section-copy">{description}</p>
+      {actions.length > 0 && (
+        <div class="hero-actions">
+          {actions.map((action) => (
+            <a href={action.href} class="hero-link">
+              {action.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+    <div class="hero-aside">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap: 24px;
+    padding: 36px;
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 18px;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fffaf4;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .hero-aside {
+    min-height: 100%;
+  }
+
+  @media (max-width: 860px) {
+    .hero-layout {
+      grid-template-columns: 1fr;
+      padding: 24px;
+    }
+  }
+</style>

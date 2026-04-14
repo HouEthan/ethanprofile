@@ -1,0 +1,24 @@
+---
+import DetailArticle from "../../components/DetailArticle.astro";
+import SiteShell from "../../components/SiteShell.astro";
+import { views } from "../../data/site";
+
+export function getStaticPaths() {
+  return views.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+---
+
+<SiteShell title={`${item.title} | View`} description={item.summary}>
+  <DetailArticle
+    title={item.title}
+    summary={item.summary}
+    meta={[item.location, `分類：${item.category}`, ...item.tags]}
+    highlights={item.highlights}
+    content={item.content}
+  />
+</SiteShell>

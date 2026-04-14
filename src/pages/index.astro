@@ -1,11 +1,115 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import CardGrid from "../components/CardGrid.astro";
+import HeroSection from "../components/HeroSection.astro";
+import SiteShell from "../components/SiteShell.astro";
+import { featuredProjects, foods, profile, views } from "../data/site";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const quickLinks = [
+  { href: "/about", label: "認識我" },
+  { href: "/projects", label: "看所有專案" },
+  { href: "/food", label: "看美食清單" },
+  { href: "/view", label: "看景點清單" },
+];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<SiteShell title="Ethan Profile" description="首頁入口，整理個人介紹、專案、美食與景點">
+  <HeroSection
+    eyebrow="Home"
+    title="把個人介紹、作品與生活內容整理成清楚的入口"
+    description={profile.intro}
+    actions={quickLinks}
+  >
+    <div class="panel intro-panel">
+      <p>{profile.title}</p>
+      <ul>
+        {profile.focusAreas.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </HeroSection>
+
+  <section class="section home-section">
+    <div class="section-head">
+      <span class="eyebrow">Featured</span>
+      <h2>最重要的專案</h2>
+      <p class="section-copy">首頁先看到精選內容，深入閱讀則進到 About 與各分類列表頁。</p>
+    </div>
+    <CardGrid
+      items={featuredProjects.map((project) => ({
+        href: `/projects/${project.slug}`,
+        title: project.title,
+        summary: project.summary,
+        meta: project.year,
+        category: "Project",
+        tags: project.stack,
+      }))}
+    />
+  </section>
+
+  <section class="section home-section">
+    <div class="grid-2">
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">Food</span>
+          <h2>近期美食整理</h2>
+        </div>
+        <CardGrid
+          items={foods.slice(0, 2).map((item) => ({
+            href: `/food/${item.slug}`,
+            title: item.title,
+            summary: item.summary,
+            meta: item.location,
+            category: item.category,
+            tags: item.tags,
+          }))}
+        />
+      </div>
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">View</span>
+          <h2>近期景點整理</h2>
+        </div>
+        <CardGrid
+          items={views.slice(0, 2).map((item) => ({
+            href: `/view/${item.slug}`,
+            title: item.title,
+            summary: item.summary,
+            meta: item.location,
+            category: item.category,
+            tags: item.tags,
+          }))}
+        />
+      </div>
+    </div>
+  </section>
+</SiteShell>
+
+<style>
+  .intro-panel {
+    height: 100%;
+    padding: 24px;
+  }
+
+  .intro-panel p {
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+
+  .intro-panel ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .home-section {
+    display: grid;
+    gap: 18px;
+  }
+
+  .section-head h2 {
+    margin: 10px 0 12px;
+    font-size: 1.9rem;
+  }
+</style>
