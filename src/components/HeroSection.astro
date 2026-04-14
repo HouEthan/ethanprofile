@@ -34,14 +34,18 @@ const { eyebrow, title, description, actions = [] } = Astro.props;
 <style>
   .hero-layout {
     display: grid;
-    grid-template-columns: 1.4fr 0.9fr;
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
     gap: 24px;
     padding: 36px;
+    align-items: start;
   }
 
   .hero-copy {
     display: grid;
     gap: 18px;
+    align-content: start;
+    justify-items: start;
+    min-width: 0;
   }
 
   .hero-actions {
@@ -49,6 +53,7 @@ const { eyebrow, title, description, actions = [] } = Astro.props;
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 8px;
+    align-items: center;
   }
 
   .hero-link {
@@ -65,7 +70,8 @@ const { eyebrow, title, description, actions = [] } = Astro.props;
   }
 
   .hero-aside {
-    min-height: 100%;
+    min-width: 0;
+    align-self: start;
   }
 
   @media (max-width: 860px) {

@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import CardGrid from "../../components/CardGrid.astro";
 import HeroSection from "../../components/HeroSection.astro";
 import SiteShell from "../../components/SiteShell.astro";
@@ -23,6 +24,7 @@ const profileText = profileContent[locale];
     actions={[{ href: `/${locale}/projects`, label: t(locale, "about.browseProjects") }]}
   >
     <div class="panel about-side">
+      <Image src={profileBase.portraitPhoto} alt={profileBase.name} class="portrait" />
       <h2>{profileBase.name}</h2>
       <p>{profileText.title}</p>
       <p>{profileText.location}</p>
@@ -70,8 +72,15 @@ const profileText = profileContent[locale];
 <style>
   .about-side {
     display: grid;
-    gap: 8px;
-    padding: 24px;
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .portrait {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 22px;
   }
 
   .about-side h2,
