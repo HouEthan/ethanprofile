@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import CardGrid from "../../components/CardGrid.astro";
 import HeroSection from "../../components/HeroSection.astro";
 import SiteShell from "../../components/SiteShell.astro";
-import { profileBase, profileContent } from "../../data/content/profile";
+import { profileBase, profileContent } from "../../data/content/profile-data";
 import { featuredProjects } from "../../data/content/projects";
 import { locales, type Locale } from "../../i18n/config";
 import { t } from "../../i18n/dictionary";
@@ -20,19 +20,28 @@ const labels = {
     skills: "核心能力",
     cert: "證照",
     exp: "經歷",
-    certNote: "證照目前是 PDF 檔。把檔案放進 `src/assets/profile/` 後，我可以幫你改成下載或預覽卡片。",
+    certTitle: "CEH",
+    certOrg: "EC-Council",
+    certMeta: "Certified Ethical Hacker",
+    certAction: "查看證照 PDF",
   },
   en: {
     skills: "Skills",
     cert: "Certification",
     exp: "Experience",
-    certNote: "The certification is currently a PDF. Once it is added to `src/assets/profile/`, I can turn this into a download or preview card.",
+    certTitle: "CEH",
+    certOrg: "EC-Council",
+    certMeta: "Certified Ethical Hacker",
+    certAction: "Open certificate PDF",
   },
   ja: {
     skills: "スキル",
     cert: "資格",
     exp: "経歴",
-    certNote: "証明書は PDF 想定です。`src/assets/profile/` に追加してもらえれば、ダウンロードまたは閲覧カードにできます。",
+    certTitle: "CEH",
+    certOrg: "EC-Council",
+    certMeta: "Certified Ethical Hacker",
+    certAction: "証明書 PDF を開く",
   },
 } as const;
 ---
@@ -86,12 +95,16 @@ const labels = {
     <div class="content-card bio cert-card">
       <span class="eyebrow">Certification</span>
       <h2>{labels[locale].cert}</h2>
-      <ul>
-        {profileText.certifications.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-      <p class="note">{labels[locale].certNote}</p>
+      <div class="certificate">
+        <div>
+          <p class="cert-org">{labels[locale].certOrg}</p>
+          <h3>{labels[locale].certTitle}</h3>
+          <p class="cert-meta">{labels[locale].certMeta}</p>
+        </div>
+        <a href="/certificates/ceh.pdf" class="cert-link" target="_blank" rel="noreferrer">
+          {labels[locale].certAction}
+        </a>
+      </div>
     </div>
   </section>
 
@@ -130,6 +143,7 @@ const labels = {
     display: grid;
     gap: 10px;
     padding: 20px;
+    align-content: start;
   }
 
   .portrait {
@@ -155,14 +169,15 @@ const labels = {
 
   .about-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
     gap: 18px;
   }
 
   .credentials-grid {
     display: grid;
-    grid-template-columns: 1.25fr 0.9fr;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.85fr);
     gap: 18px;
+    align-items: stretch;
   }
 
   .bio {
@@ -174,7 +189,8 @@ const labels = {
     padding-left: 20px;
   }
 
-  .bio li + li {
+  .bio li + li,
+  .bio p + p {
     margin-top: 8px;
   }
 
@@ -188,22 +204,67 @@ const labels = {
   .chip {
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
+    min-height: 38px;
     padding: 0 14px;
     border-radius: 999px;
     border: 1px solid rgba(33, 22, 15, 0.12);
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.84);
     color: var(--text);
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .cert-card {
-    align-content: start;
+    display: flex;
+    flex-direction: column;
   }
 
-  .note {
-    margin-top: 14px !important;
-    font-size: 0.92rem;
+  .certificate {
+    display: grid;
+    gap: 18px;
+    margin-top: 10px;
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(33, 22, 15, 0.08);
+  }
+
+  .certificate h3 {
+    margin: 6px 0 8px;
+    font-size: 1.45rem;
+  }
+
+  .cert-org,
+  .cert-meta {
+    margin: 0;
+  }
+
+  .cert-org {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+  }
+
+  .cert-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(33, 22, 15, 0.14);
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.92);
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  }
+
+  .cert-link:hover {
+    transform: translateY(-1px);
+    border-color: rgba(154, 78, 131, 0.32);
+    background: rgba(255, 255, 255, 1);
   }
 
   @media (max-width: 860px) {
