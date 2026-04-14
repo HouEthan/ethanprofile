@@ -14,6 +14,27 @@ export function getStaticPaths() {
 
 const locale = Astro.params.locale as Locale;
 const profileText = profileContent[locale];
+
+const labels = {
+  zh: {
+    skills: "核心能力",
+    cert: "證照",
+    exp: "經歷",
+    certNote: "證照目前是 PDF 檔。把檔案放進 `src/assets/profile/` 後，我可以幫你改成下載或預覽卡片。",
+  },
+  en: {
+    skills: "Skills",
+    cert: "Certification",
+    exp: "Experience",
+    certNote: "The certification is currently a PDF. Once it is added to `src/assets/profile/`, I can turn this into a download or preview card.",
+  },
+  ja: {
+    skills: "スキル",
+    cert: "資格",
+    exp: "経歴",
+    certNote: "証明書は PDF 想定です。`src/assets/profile/` に追加してもらえれば、ダウンロードまたは閲覧カードにできます。",
+  },
+} as const;
 ---
 
 <SiteShell locale={locale} pathname="/about" title={`${t(locale, "nav.about")} | ${t(locale, "brand")}`} description={t(locale, "about.description")}>
@@ -45,6 +66,41 @@ const profileText = profileContent[locale];
       <h2>{t(locale, "about.focus")}</h2>
       <ul>
         {profileText.focusAreas.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section credentials-grid">
+    <div class="content-card bio">
+      <span class="eyebrow">Skills</span>
+      <h2>{labels[locale].skills}</h2>
+      <div class="chip-list">
+        {profileText.skills.map((item) => (
+          <span class="chip">{item}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="content-card bio cert-card">
+      <span class="eyebrow">Certification</span>
+      <h2>{labels[locale].cert}</h2>
+      <ul>
+        {profileText.certifications.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+      <p class="note">{labels[locale].certNote}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="content-card bio">
+      <span class="eyebrow">Experience</span>
+      <h2>{labels[locale].exp}</h2>
+      <ul>
+        {profileText.experience.map((item) => (
           <li>{item}</li>
         ))}
       </ul>
@@ -103,6 +159,12 @@ const profileText = profileContent[locale];
     gap: 18px;
   }
 
+  .credentials-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.9fr;
+    gap: 18px;
+  }
+
   .bio {
     padding: 24px;
   }
@@ -112,8 +174,41 @@ const profileText = profileContent[locale];
     padding-left: 20px;
   }
 
+  .bio li + li {
+    margin-top: 8px;
+  }
+
+  .chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(33, 22, 15, 0.12);
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .cert-card {
+    align-content: start;
+  }
+
+  .note {
+    margin-top: 14px !important;
+    font-size: 0.92rem;
+  }
+
   @media (max-width: 860px) {
-    .about-grid {
+    .about-grid,
+    .credentials-grid {
       grid-template-columns: 1fr;
     }
   }

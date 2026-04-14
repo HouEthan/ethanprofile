@@ -15,17 +15,27 @@ export function getStaticPaths() {
 }
 
 const { locale, project } = Astro.props as { locale: Locale; project: (typeof projects)[number] };
+const sectionLabels = {
+  zh: { tech: "採用技術", intro: "專案介紹", features: "核心功能" },
+  en: { tech: "Tech Stack", intro: "Project Intro", features: "Core Features" },
+  ja: { tech: "採用技術", intro: "プロジェクト紹介", features: "主な機能" },
+} as const;
 ---
 
 <SiteShell locale={locale} pathname={`/projects/${project.slug}`} title={`${t(locale, project.titleKey)} | ${t(locale, "nav.projects")}`} description={t(locale, project.summaryKey)}>
   <LocalizedDetailArticle
     eyebrow={t(locale, "sections.detail")}
-    highlightTitle={t(locale, "sections.highlights")}
-    contentTitle={t(locale, "sections.content")}
+    techTitle={sectionLabels[locale].tech}
+    introTitle={sectionLabels[locale].intro}
+    highlightTitle={sectionLabels[locale].features}
     title={t(locale, project.titleKey)}
     summary={t(locale, project.summaryKey)}
     meta={[project.year, t(locale, project.roleKey), `${t(locale, "meta.categoryPrefix")}: ${t(locale, `categories.${project.category}`)}`, ...project.stack]}
+    stack={project.stack}
     highlights={project.highlightKeys.map((key) => t(locale, key))}
     content={project.content[locale]}
+    introLinkLabel={sectionLabels[locale].intro}
+    techLinkLabel={sectionLabels[locale].tech}
+    featureLinkLabel={sectionLabels[locale].features}
   />
 </SiteShell>

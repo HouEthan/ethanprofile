@@ -1,103 +1,359 @@
 ---
 interface Props {
   eyebrow?: string;
+  techTitle?: string;
+  introTitle?: string;
   highlightTitle?: string;
-  contentTitle?: string;
   title: string;
   summary: string;
   meta: string[];
+  stack?: string[];
   highlights: string[];
   content: string[];
+  introLinkLabel?: string;
+  techLinkLabel?: string;
+  featureLinkLabel?: string;
 }
 
 const {
   title,
   summary,
   meta,
+  stack = [],
   highlights,
   content,
   eyebrow = "Detail",
+  techTitle = "Tech Stack",
+  introTitle = "Project Intro",
   highlightTitle = "Highlights",
-  contentTitle = "Overview",
+  introLinkLabel = "Project Intro",
+  techLinkLabel = "Tech Stack",
+  featureLinkLabel = "Highlights",
 } = Astro.props;
 ---
 
 <section class="section">
-  <article class="content-card article">
-    <div class="article-head">
-      <span class="eyebrow">{eyebrow}</span>
-      <h1 class="section-title">{title}</h1>
-      <p class="section-copy">{summary}</p>
-    </div>
+  <article class="project-layout">
+    <aside class="content-card project-side">
+      <div class="side-top">
+        <span class="detail-status">{eyebrow}</span>
+        <span class="detail-badge">Featured</span>
+      </div>
 
-    <div class="meta-row">
-      {meta.map((item) => (
-        <span>{item}</span>
-      ))}
-    </div>
+      <h1>{title}</h1>
+      <p class="side-summary">{summary}</p>
 
-    <section class="article-block">
-      <h2>{highlightTitle}</h2>
-      <ul>
-        {highlights.map((item) => (
-          <li>{item}</li>
+      <div class="meta-stack">
+        {meta.map((item) => (
+          <span>{item}</span>
         ))}
-      </ul>
-    </section>
+      </div>
 
-    <section class="article-block">
-      <h2>{contentTitle}</h2>
-      {content.map((paragraph) => (
-        <p>{paragraph}</p>
-      ))}
-    </section>
+      <nav class="side-links" aria-label="Project sections">
+        <a href="#project-intro">{introLinkLabel}</a>
+        <a href="#project-tech">{techLinkLabel}</a>
+        <a href="#project-features">{featureLinkLabel}</a>
+      </nav>
+    </aside>
+
+    <div class="project-main">
+      <section class="content-card showcase-card">
+        <div class="showcase-head">
+          <div>
+            <h2>{title}</h2>
+            <p>{summary}</p>
+          </div>
+        </div>
+
+        <div class="showcase-mockup">
+          <div class="device is-left"></div>
+          <div class="device is-center"></div>
+          <div class="device is-right">
+            <div class="device-toolbar"></div>
+            <div class="device-screen">
+              <div class="hero-card-mini"></div>
+              <div class="cta-row"></div>
+              <div class="cta-row"></div>
+              <div class="cta-row"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {stack.length > 0 && (
+        <section id="project-tech" class="content-card detail-block">
+          <h2>{techTitle}</h2>
+          <div class="tech-grid">
+            {stack.map((item) => (
+              <div class="tech-item">
+                <strong>{item}</strong>
+                <p>{item}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section id="project-intro" class="content-card detail-block">
+        <h2>{introTitle}</h2>
+        {content.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </section>
+
+      <section id="project-features" class="content-card detail-block">
+        <h2>{highlightTitle}</h2>
+        <div class="feature-list">
+          {highlights.map((item) => (
+            <div class="feature-item">
+              <h3>{item}</h3>
+              <p>{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
   </article>
 </section>
 
 <style>
-  .article {
-    padding: 32px;
-  }
-
-  .article-head {
+  .project-layout {
     display: grid;
-    gap: 16px;
-    margin-bottom: 24px;
+    grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
   }
 
-  .meta-row {
+  .project-side,
+  .showcase-card,
+  .detail-block {
+    padding: 26px;
+    border-radius: 22px;
+  }
+
+  .project-side {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    gap: 18px;
+    align-self: start;
+  }
+
+  .side-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .detail-status,
+  .detail-badge,
+  .meta-stack span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+  }
+
+  .detail-status {
+    background: #15a646;
+    color: white;
+    font-weight: 700;
+  }
+
+  .detail-badge {
+    border: 1px solid rgba(33, 22, 15, 0.14);
+    background: white;
+    color: var(--text);
+  }
+
+  .project-side h1 {
+    margin: 0;
+    font-size: 1.65rem;
+    line-height: 1.25;
+    color: #23160f;
+  }
+
+  .side-summary {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .meta-stack {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 28px;
   }
 
-  .meta-row span {
+  .meta-stack span {
+    border: 1px solid rgba(33, 22, 15, 0.1);
+    background: rgba(255, 255, 255, 0.76);
+    color: #5f4a3d;
+  }
+
+  .side-links {
+    display: grid;
+    gap: 12px;
+  }
+
+  .side-links a {
     display: inline-flex;
-    min-height: 34px;
+    justify-content: center;
     align-items: center;
-    padding: 0 12px;
+    min-height: 46px;
+    padding: 0 18px;
     border-radius: 999px;
-    background: rgba(111, 47, 18, 0.08);
-    color: var(--accent-deep);
+    border: 1px solid rgba(33, 22, 15, 0.14);
+    background: white;
+    color: #23160f;
+    text-decoration: none;
+    font-weight: 600;
   }
 
-  .article-block + .article-block {
-    margin-top: 28px;
+  .project-main {
+    display: grid;
+    gap: 22px;
   }
 
-  .article-block h2 {
-    margin: 0 0 12px;
+  .showcase-card {
+    background: linear-gradient(180deg, #fbf2f6 0%, #fff9f7 100%);
+    overflow: hidden;
   }
 
-  .article-block p,
-  .article-block li {
-    color: var(--muted);
-    line-height: 1.8;
+  .showcase-head h2,
+  .detail-block h2 {
+    margin: 0 0 16px;
+    color: #8a4f88;
+    font-size: 1.7rem;
+    line-height: 1.1;
   }
 
-  .article-block ul {
+  .showcase-head p {
     margin: 0;
-    padding-left: 20px;
+    color: #8e5360;
+    line-height: 1.75;
+  }
+
+  .showcase-mockup {
+    position: relative;
+    height: 250px;
+    margin-top: 18px;
+    overflow: hidden;
+  }
+
+  .device {
+    position: absolute;
+    bottom: 0;
+    border-radius: 14px 14px 0 0;
+    border: 1px solid rgba(25, 17, 11, 0.12);
+    background: #fffdfb;
+    box-shadow: 0 16px 26px rgba(20, 14, 10, 0.22);
+  }
+
+  .device.is-left {
+    left: 2%;
+    width: 32%;
+    height: 150px;
+    background: linear-gradient(180deg, #f8f3ef, #ede6e2);
+  }
+
+  .device.is-center {
+    left: 28%;
+    width: 30%;
+    height: 190px;
+    background: linear-gradient(180deg, #fffefe, #f4efed);
+  }
+
+  .device.is-right {
+    right: 0;
+    width: 44%;
+    height: 230px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #fff9fb, #fde5ee);
+  }
+
+  .device-toolbar {
+    height: 18px;
+    background: rgba(255, 255, 255, 0.82);
+    border-bottom: 1px solid rgba(25, 17, 11, 0.08);
+  }
+
+  .device-screen {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .hero-card-mini {
+    width: 74%;
+    height: 72px;
+    border-radius: 14px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  .cta-row {
+    width: 82%;
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #df79a0, #df6aa0);
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 24px;
+  }
+
+  .tech-item strong,
+  .feature-item h3 {
+    display: block;
+    margin-bottom: 4px;
+    color: #1f1610;
+    font-size: 1rem;
+  }
+
+  .tech-item p,
+  .feature-item p,
+  .detail-block p {
+    margin: 0;
+    color: #4a3a31;
+    line-height: 1.9;
+  }
+
+  .feature-list {
+    display: grid;
+    gap: 22px;
+  }
+
+  .detail-block p {
+    margin: 0 0 16px;
+  }
+
+  .detail-block p:last-child {
+    margin-bottom: 0;
+  }
+
+  .feature-item + .feature-item {
+    border-top: 1px solid rgba(33, 22, 15, 0.08);
+    padding-top: 22px;
+  }
+
+  @media (max-width: 980px) {
+    .project-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .project-side {
+      position: static;
+    }
+
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
