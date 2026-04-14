@@ -1,0 +1,31 @@
+---
+import LocalizedDetailArticle from "../../../components/LocalizedDetailArticle.astro";
+import SiteShell from "../../../components/SiteShell.astro";
+import { projects } from "../../../data/content/projects";
+import { locales, type Locale } from "../../../i18n/config";
+import { t } from "../../../i18n/dictionary";
+
+export function getStaticPaths() {
+  return locales.flatMap((locale) =>
+    projects.map((project) => ({
+      params: { locale, slug: project.slug },
+      props: { locale, project },
+    })),
+  );
+}
+
+const { locale, project } = Astro.props as { locale: Locale; project: (typeof projects)[number] };
+---
+
+<SiteShell locale={locale} pathname={`/projects/${project.slug}`} title={`${t(locale, project.titleKey)} | ${t(locale, "nav.projects")}`} description={t(locale, project.summaryKey)}>
+  <LocalizedDetailArticle
+    eyebrow={t(locale, "sections.detail")}
+    highlightTitle={t(locale, "sections.highlights")}
+    contentTitle={t(locale, "sections.content")}
+    title={t(locale, project.titleKey)}
+    summary={t(locale, project.summaryKey)}
+    meta={[project.year, t(locale, project.roleKey), `${t(locale, "meta.categoryPrefix")}: ${t(locale, `categories.${project.category}`)}`, ...project.stack]}
+    highlights={project.highlightKeys.map((key) => t(locale, key))}
+    content={project.content[locale]}
+  />
+</SiteShell>

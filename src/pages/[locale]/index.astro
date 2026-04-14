@@ -1,0 +1,122 @@
+---
+import CardGrid from "../../components/CardGrid.astro";
+import HeroSection from "../../components/HeroSection.astro";
+import SiteShell from "../../components/SiteShell.astro";
+import { profileBase, profileContent } from "../../data/content/profile";
+import { featuredProjects } from "../../data/content/projects";
+import { foods } from "../../data/content/food";
+import { views } from "../../data/content/view";
+import { locales, type Locale } from "../../i18n/config";
+import { t } from "../../i18n/dictionary";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const profileText = profileContent[locale];
+
+const quickLinks = [
+  { href: `/${locale}/about`, label: t(locale, "home.actions.about") },
+  { href: `/${locale}/projects`, label: t(locale, "home.actions.projects") },
+  { href: `/${locale}/food`, label: t(locale, "home.actions.food") },
+  { href: `/${locale}/view`, label: t(locale, "home.actions.view") },
+];
+---
+
+<SiteShell locale={locale} pathname="" title={t(locale, "brand")} description={profileText.intro}>
+  <HeroSection eyebrow={t(locale, "home.eyebrow")} title={t(locale, "home.title")} description={profileText.intro} actions={quickLinks}>
+    <div class="panel intro-panel">
+      <p>{profileText.title}</p>
+      <ul>
+        {profileText.focusAreas.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </HeroSection>
+
+  <section class="section home-section">
+    <div class="section-head">
+      <span class="eyebrow">{t(locale, "sections.featured")}</span>
+      <h2>{t(locale, "home.featured")}</h2>
+      <p class="section-copy">{t(locale, "home.featuredCopy")}</p>
+    </div>
+    <CardGrid
+      items={featuredProjects.map((project) => ({
+        href: `/${locale}/projects/${project.slug}`,
+        title: t(locale, project.titleKey),
+        summary: t(locale, project.summaryKey),
+        meta: project.year,
+        category: t(locale, "archive.projectLabel"),
+        tags: project.stack,
+      }))}
+    />
+  </section>
+
+  <section class="section home-section">
+    <div class="grid-2">
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">{t(locale, "sections.food")}</span>
+          <h2>{t(locale, "home.foodTitle")}</h2>
+        </div>
+        <CardGrid
+          items={foods.slice(0, 2).map((item) => ({
+            href: `/${locale}/food/${item.slug}`,
+            title: t(locale, item.titleKey),
+            summary: t(locale, item.summaryKey),
+            meta: t(locale, item.locationKey),
+            category: t(locale, `categories.${item.category}`),
+            tags: item.tagKeys.map((key) => t(locale, key)),
+          }))}
+        />
+      </div>
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">{t(locale, "sections.view")}</span>
+          <h2>{t(locale, "home.viewTitle")}</h2>
+        </div>
+        <CardGrid
+          items={views.slice(0, 2).map((item) => ({
+            href: `/${locale}/view/${item.slug}`,
+            title: t(locale, item.titleKey),
+            summary: t(locale, item.summaryKey),
+            meta: t(locale, item.locationKey),
+            category: t(locale, `categories.${item.category}`),
+            tags: item.tagKeys.map((key) => t(locale, key)),
+          }))}
+        />
+      </div>
+    </div>
+  </section>
+</SiteShell>
+
+<style>
+  .intro-panel {
+    height: 100%;
+    padding: 24px;
+  }
+
+  .intro-panel p {
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+
+  .intro-panel ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .home-section {
+    display: grid;
+    gap: 18px;
+  }
+
+  .section-head h2 {
+    margin: 10px 0 12px;
+    font-size: 1.9rem;
+  }
+</style>

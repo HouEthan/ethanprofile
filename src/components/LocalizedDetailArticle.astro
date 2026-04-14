@@ -1,5 +1,8 @@
 ---
 interface Props {
+  eyebrow?: string;
+  highlightTitle?: string;
+  contentTitle?: string;
   title: string;
   summary: string;
   meta: string[];
@@ -7,13 +10,22 @@ interface Props {
   content: string[];
 }
 
-const { title, summary, meta, highlights, content } = Astro.props;
+const {
+  title,
+  summary,
+  meta,
+  highlights,
+  content,
+  eyebrow = "Detail",
+  highlightTitle = "Highlights",
+  contentTitle = "Overview",
+} = Astro.props;
 ---
 
 <section class="section">
   <article class="content-card article">
     <div class="article-head">
-      <span class="eyebrow">Detail</span>
+      <span class="eyebrow">{eyebrow}</span>
       <h1 class="section-title">{title}</h1>
       <p class="section-copy">{summary}</p>
     </div>
@@ -25,7 +37,7 @@ const { title, summary, meta, highlights, content } = Astro.props;
     </div>
 
     <section class="article-block">
-      <h2>重點整理</h2>
+      <h2>{highlightTitle}</h2>
       <ul>
         {highlights.map((item) => (
           <li>{item}</li>
@@ -34,7 +46,7 @@ const { title, summary, meta, highlights, content } = Astro.props;
     </section>
 
     <section class="article-block">
-      <h2>內容說明</h2>
+      <h2>{contentTitle}</h2>
       {content.map((paragraph) => (
         <p>{paragraph}</p>
       ))}

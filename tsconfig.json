@@ -5,7 +5,8 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "src/legacy-pages"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

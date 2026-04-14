@@ -1,0 +1,59 @@
+---
+import CardGrid from "../../../components/CardGrid.astro";
+import HeroSection from "../../../components/HeroSection.astro";
+import LocalizedCategoryStrip from "../../../components/LocalizedCategoryStrip.astro";
+import SiteShell from "../../../components/SiteShell.astro";
+import { viewCategories, views } from "../../../data/content/view";
+import { locales, type Locale } from "../../../i18n/config";
+import { t } from "../../../i18n/dictionary";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+---
+
+<SiteShell locale={locale} pathname="/view" title={`${t(locale, "nav.view")} | ${t(locale, "brand")}`} description={t(locale, "archive.viewDescription")}>
+  <HeroSection eyebrow={t(locale, "sections.view")} title={t(locale, "archive.viewTitle")} description={t(locale, "archive.viewDescription")}>
+    <div class="panel info-panel">
+      <h2>{views.length} {t(locale, "archive.viewCount")}</h2>
+      <p>{t(locale, "archive.viewSummary")}</p>
+    </div>
+  </HeroSection>
+
+  <LocalizedCategoryStrip
+    eyebrow={t(locale, "sections.categories")}
+    title={t(locale, "archive.viewCategories")}
+    categories={viewCategories.map((category) => t(locale, `categories.${category}`))}
+  />
+
+  <section class="section">
+    <CardGrid
+      items={views.map((item) => ({
+        href: `/${locale}/view/${item.slug}`,
+        title: t(locale, item.titleKey),
+        summary: t(locale, item.summaryKey),
+        meta: t(locale, item.locationKey),
+        category: t(locale, `categories.${item.category}`),
+        tags: item.tagKeys.map((key) => t(locale, key)),
+      }))}
+    />
+  </section>
+</SiteShell>
+
+<style>
+  .info-panel {
+    padding: 24px;
+  }
+
+  .info-panel h2 {
+    margin: 0 0 12px;
+  }
+
+  .info-panel p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+</style>

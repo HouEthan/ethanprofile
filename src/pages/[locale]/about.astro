@@ -1,0 +1,111 @@
+---
+import CardGrid from "../../components/CardGrid.astro";
+import HeroSection from "../../components/HeroSection.astro";
+import SiteShell from "../../components/SiteShell.astro";
+import { profileBase, profileContent } from "../../data/content/profile";
+import { featuredProjects } from "../../data/content/projects";
+import { locales, type Locale } from "../../i18n/config";
+import { t } from "../../i18n/dictionary";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const profileText = profileContent[locale];
+---
+
+<SiteShell locale={locale} pathname="/about" title={`${t(locale, "nav.about")} | ${t(locale, "brand")}`} description={t(locale, "about.description")}>
+  <HeroSection
+    eyebrow={t(locale, "about.eyebrow")}
+    title={t(locale, "about.title")}
+    description={t(locale, "about.description")}
+    actions={[{ href: `/${locale}/projects`, label: t(locale, "about.browseProjects") }]}
+  >
+    <div class="panel about-side">
+      <h2>{profileBase.name}</h2>
+      <p>{profileText.title}</p>
+      <p>{profileText.location}</p>
+      <a href={`mailto:${profileBase.email}`}>{profileBase.email}</a>
+    </div>
+  </HeroSection>
+
+  <section class="section about-grid">
+    <div class="content-card bio">
+      <span class="eyebrow">{t(locale, "sections.profile")}</span>
+      <h2>{t(locale, "about.profile")}</h2>
+      {profileText.about.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </div>
+    <div class="content-card bio">
+      <span class="eyebrow">{t(locale, "sections.focus")}</span>
+      <h2>{t(locale, "about.focus")}</h2>
+      <ul>
+        {profileText.focusAreas.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <span class="eyebrow">{t(locale, "sections.featured")}</span>
+      <h2>{t(locale, "about.featuredProjects")}</h2>
+    </div>
+    <CardGrid
+      items={featuredProjects.map((project) => ({
+        href: `/${locale}/projects/${project.slug}`,
+        title: t(locale, project.titleKey),
+        summary: t(locale, project.summaryKey),
+        meta: t(locale, project.roleKey),
+        category: project.year,
+        tags: project.stack,
+      }))}
+    />
+  </section>
+</SiteShell>
+
+<style>
+  .about-side {
+    display: grid;
+    gap: 8px;
+    padding: 24px;
+  }
+
+  .about-side h2,
+  .bio h2,
+  .section-head h2 {
+    margin: 8px 0 12px;
+  }
+
+  .about-side p,
+  .bio p,
+  .bio li {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 18px;
+  }
+
+  .bio {
+    padding: 24px;
+  }
+
+  .bio ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
