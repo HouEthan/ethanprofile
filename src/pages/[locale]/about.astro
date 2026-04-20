@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import CardGrid from "../../components/CardGrid.astro";
 import HeroSection from "../../components/HeroSection.astro";
 import SiteShell from "../../components/SiteShell.astro";
-import { profileBase, profileContent } from "../../data/content/profile-data";
+import { profileBase, profileContent } from "../../data/content/profile";
 import { featuredProjects } from "../../data/content/projects";
 import { locales, type Locale } from "../../i18n/config";
 import { t } from "../../i18n/dictionary";
@@ -15,44 +15,59 @@ export function getStaticPaths() {
 const locale = Astro.params.locale as Locale;
 const profileText = profileContent[locale];
 
-const labels = {
+const copy = {
   zh: {
+    title: "關於我",
+    description: "這一頁把履歷中的重點內容重新整理成比較適合網站閱讀的版本，包含自介、技能、學歷、證照與實務經驗。",
+    eyebrow: "About",
+    profile: "個人簡介",
+    focus: "目前關注",
     skills: "核心能力",
     cert: "證照",
-    exp: "經歷",
-    certTitle: "CEH",
-    certOrg: "EC-Council",
-    certMeta: "Certified Ethical Hacker",
+    education: "學歷與研究",
+    exp: "實務經驗",
+    highlights: "重要亮點",
+    featured: "精選專案",
+    browseProjects: "瀏覽所有專案",
     certAction: "查看證照 PDF",
   },
   en: {
+    title: "About",
+    description: "This page turns resume content into a more readable website format, covering profile, skills, education, certification, and practical experience.",
+    eyebrow: "About",
+    profile: "Profile",
+    focus: "Current focus",
     skills: "Skills",
     cert: "Certification",
+    education: "Education & Research",
     exp: "Experience",
-    certTitle: "CEH",
-    certOrg: "EC-Council",
-    certMeta: "Certified Ethical Hacker",
+    highlights: "Highlights",
+    featured: "Featured projects",
+    browseProjects: "Browse all projects",
     certAction: "Open certificate PDF",
   },
   ja: {
+    title: "About",
+    description: "履歴書の内容を、プロフィール、スキル、学歴、資格、実務経験として読みやすく整理したページです。",
+    eyebrow: "About",
+    profile: "プロフィール",
+    focus: "現在の関心",
     skills: "スキル",
     cert: "資格",
-    exp: "経歴",
-    certTitle: "CEH",
-    certOrg: "EC-Council",
-    certMeta: "Certified Ethical Hacker",
+    education: "学歴・研究",
+    exp: "実務経験",
+    highlights: "ハイライト",
+    featured: "注目プロジェクト",
+    browseProjects: "すべてのプロジェクトを見る",
     certAction: "証明書 PDF を開く",
   },
 } as const;
+
+const ui = copy[locale];
 ---
 
-<SiteShell locale={locale} pathname="/about" title={`${t(locale, "nav.about")} | ${t(locale, "brand")}`} description={t(locale, "about.description")}>
-  <HeroSection
-    eyebrow={t(locale, "about.eyebrow")}
-    title={t(locale, "about.title")}
-    description={t(locale, "about.description")}
-    actions={[{ href: `/${locale}/projects`, label: t(locale, "about.browseProjects") }]}
-  >
+<SiteShell locale={locale} pathname="/about" title={`${ui.title} | Ethan Profile`} description={ui.description}>
+  <HeroSection eyebrow={ui.eyebrow} title={ui.title} description={ui.description} actions={[{ href: `/${locale}/projects`, label: ui.browseProjects }]}>
     <div class="panel about-side">
       <Image src={profileBase.portraitPhoto} alt={profileBase.name} class="portrait" />
       <h2>{profileBase.name}</h2>
@@ -62,17 +77,18 @@ const labels = {
     </div>
   </HeroSection>
 
-  <section class="section about-grid">
+  <section class="section two-col">
     <div class="content-card bio">
-      <span class="eyebrow">{t(locale, "sections.profile")}</span>
-      <h2>{t(locale, "about.profile")}</h2>
+      <span class="eyebrow">{ui.profile}</span>
+      <h2>{ui.profile}</h2>
       {profileText.about.map((paragraph) => (
         <p>{paragraph}</p>
       ))}
     </div>
+
     <div class="content-card bio">
-      <span class="eyebrow">{t(locale, "sections.focus")}</span>
-      <h2>{t(locale, "about.focus")}</h2>
+      <span class="eyebrow">{ui.focus}</span>
+      <h2>{ui.focus}</h2>
       <ul>
         {profileText.focusAreas.map((item) => (
           <li>{item}</li>
@@ -81,10 +97,10 @@ const labels = {
     </div>
   </section>
 
-  <section class="section credentials-grid">
+  <section class="section two-col">
     <div class="content-card bio">
-      <span class="eyebrow">Skills</span>
-      <h2>{labels[locale].skills}</h2>
+      <span class="eyebrow">{ui.skills}</span>
+      <h2>{ui.skills}</h2>
       <div class="chip-list">
         {profileText.skills.map((item) => (
           <span class="chip">{item}</span>
@@ -93,25 +109,47 @@ const labels = {
     </div>
 
     <div class="content-card bio cert-card">
-      <span class="eyebrow">Certification</span>
-      <h2>{labels[locale].cert}</h2>
+      <span class="eyebrow">{ui.cert}</span>
+      <h2>{ui.cert}</h2>
       <div class="certificate">
         <div>
-          <p class="cert-org">{labels[locale].certOrg}</p>
-          <h3>{labels[locale].certTitle}</h3>
-          <p class="cert-meta">{labels[locale].certMeta}</p>
+          {profileText.certifications.map((item) => (
+            <p class="cert-name">{item}</p>
+          ))}
         </div>
         <a href="/certificates/ceh.pdf" class="cert-link" target="_blank" rel="noreferrer">
-          {labels[locale].certAction}
+          {ui.certAction}
         </a>
       </div>
     </div>
   </section>
 
+  <section class="section two-col">
+    <div class="content-card bio">
+      <span class="eyebrow">{ui.education}</span>
+      <h2>{ui.education}</h2>
+      <ul>
+        {profileText.education.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="content-card bio">
+      <span class="eyebrow">{ui.highlights}</span>
+      <h2>{ui.highlights}</h2>
+      <ul>
+        {profileText.highlights.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <section class="section">
     <div class="content-card bio">
-      <span class="eyebrow">Experience</span>
-      <h2>{labels[locale].exp}</h2>
+      <span class="eyebrow">{ui.exp}</span>
+      <h2>{ui.exp}</h2>
       <ul>
         {profileText.experience.map((item) => (
           <li>{item}</li>
@@ -122,8 +160,8 @@ const labels = {
 
   <section class="section">
     <div class="section-head">
-      <span class="eyebrow">{t(locale, "sections.featured")}</span>
-      <h2>{t(locale, "about.featuredProjects")}</h2>
+      <span class="eyebrow">{ui.featured}</span>
+      <h2>{ui.featured}</h2>
     </div>
     <CardGrid
       items={featuredProjects.map((project) => ({
@@ -167,17 +205,10 @@ const labels = {
     line-height: 1.8;
   }
 
-  .about-grid {
+  .two-col {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 18px;
-  }
-
-  .credentials-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.85fr);
-    gap: 18px;
-    align-items: stretch;
   }
 
   .bio {
@@ -191,7 +222,7 @@ const labels = {
 
   .bio li + li,
   .bio p + p {
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   .chip-list {
@@ -213,11 +244,6 @@ const labels = {
     font-weight: 700;
   }
 
-  .cert-card {
-    display: flex;
-    flex-direction: column;
-  }
-
   .certificate {
     display: grid;
     gap: 18px;
@@ -228,22 +254,9 @@ const labels = {
     border: 1px solid rgba(33, 22, 15, 0.08);
   }
 
-  .certificate h3 {
-    margin: 6px 0 8px;
-    font-size: 1.45rem;
-  }
-
-  .cert-org,
-  .cert-meta {
-    margin: 0;
-  }
-
-  .cert-org {
-    color: var(--accent);
+  .cert-name {
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-size: 0.78rem;
+    color: var(--text) !important;
   }
 
   .cert-link {
@@ -258,18 +271,10 @@ const labels = {
     font-weight: 700;
     text-decoration: none;
     background: rgba(255, 255, 255, 0.92);
-    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-  }
-
-  .cert-link:hover {
-    transform: translateY(-1px);
-    border-color: rgba(154, 78, 131, 0.32);
-    background: rgba(255, 255, 255, 1);
   }
 
   @media (max-width: 860px) {
-    .about-grid,
-    .credentials-grid {
+    .two-col {
       grid-template-columns: 1fr;
     }
   }
