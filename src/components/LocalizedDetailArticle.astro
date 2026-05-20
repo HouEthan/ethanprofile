@@ -3,6 +3,7 @@ interface Props {
   eyebrow?: string;
   techTitle?: string;
   introTitle?: string;
+  contentTitle?: string;
   highlightTitle?: string;
   title: string;
   summary: string;
@@ -24,12 +25,15 @@ const {
   content,
   eyebrow = "Detail",
   techTitle = "Tech Stack",
-  introTitle = "Project Intro",
+  introTitle,
+  contentTitle,
   highlightTitle = "Highlights",
   introLinkLabel = "Project Intro",
   techLinkLabel = "Tech Stack",
   featureLinkLabel = "Highlights",
 } = Astro.props;
+
+const resolvedIntroTitle = introTitle ?? contentTitle ?? "Project Intro";
 ---
 
 <section class="section">
@@ -95,7 +99,7 @@ const {
       )}
 
       <section id="project-intro" class="content-card detail-block">
-        <h2>{introTitle}</h2>
+        <h2>{resolvedIntroTitle}</h2>
         {content.map((paragraph) => (
           <p>{paragraph}</p>
         ))}
